@@ -1,29 +1,27 @@
+import email
 from django import forms
 from string import punctuation
-
-from users.models import UserProfile
+from django.contrib.auth.models import User, UserManager
 
 punctuation = r"""!"#$%&"()*+,/:;<=>?@[\]^`{|}~"""
 
 class SignupForm(forms.ModelForm):
-    username = forms.CharField(label="Username", max_length=15)
-    email_address = forms.CharField(label="email", max_length=15)
+    username = forms.CharField(label="Username", max_length=20)
+    email = forms.CharField(label="email", max_length=50)
     first_name = forms.CharField(label="First Name", max_length=20)
     last_name = forms.CharField(label="Last Name", max_length=20)
     password = forms.CharField(label="Password", max_length=50, widget=forms.PasswordInput)
     confirm_password = forms.CharField(label="Confirm Password", max_length=50, widget=forms.PasswordInput)
-    profile_picture = forms.ImageField()
 
     class Meta:
-        model = UserProfile
+        model = User
         fields = [
             'username',
-            'email_address',
+            'email',
             'first_name',
             'last_name',
             'password',
-            'confirm_password',
-            'profile_picture'
+            'confirm_password'
         ]
     
     def save(self, commit=True):
@@ -48,7 +46,7 @@ class SignupForm(forms.ModelForm):
         password = self.cleaned_data["password"]
         confirm_password = self.cleaned_data["confirm_password"]
         if password and confirm_password and password == confirm_password:
-            if confirm_password >= 7:
+            if len(confirm_password) >= 7:
                 return confirm_password
             else:
                 raise forms.ValidationError("Your Password must be atleast 7 characters.")

@@ -1,0 +1,11 @@
+<html>
+    <div>
+        <h1>
+            {% if request.user.is_authenticated == True %}
+            Authentication Successful
+            {% else %}
+            something went wrong! :()
+            {% endif %}
+        </h1>
+    </div>
+</html>

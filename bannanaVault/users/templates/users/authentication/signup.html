@@ -1,0 +1,10 @@
+<html>
+    <div>
+        <form action="{% url 'signup' %}" method="post">
+            {% csrf_token %}
+            <h1>Sign Up</h1>
+            {{ form.as_p }}
+            <button type='submit' style="cursor: pointer">Submit</button>
+        </form>
+    </div>
+</html>
