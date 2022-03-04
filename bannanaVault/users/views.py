@@ -2,6 +2,7 @@ from multiprocessing import AuthenticationError
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
+from passwords.models import PasswordVault
 from users.forms import SignupForm
 from django import forms
 from django.contrib.auth.decorators import login_required
@@ -16,7 +17,6 @@ def login_view(request):
         ### Look at post data and create account
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
@@ -46,7 +46,9 @@ def signup(request):
 
 @login_required(login_url='login')
 def home(request):
-    return render(request, 'home.html')
+    vault = request.user.password_vault
+    password_entries = vault.password_entry.all()
+    return render(request, 'home.html', context={'password_entries': password_entries})
 
 @login_required(login_url='login')
 def logout_view(request):

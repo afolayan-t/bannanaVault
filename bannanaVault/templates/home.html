@@ -3,6 +3,18 @@
         <h1>
             {% if request.user.is_authenticated == True %}
             Authentication Successful
+            <a href="{% url 'create_password_entry' %}">Create a Password</a>
+                {% if password_entries %}
+                    {% for entry in password_entries %}
+                        <div>
+                            {% if entry %}
+                                <p>{{ entry.site_name }}</p>
+                                <p>{{ entry.auth_id }}</p>
+                                <p>{{ entry.site_url }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% endif %}
             {% else %}
             something went wrong! :()
             {% endif %}
