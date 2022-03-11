@@ -1,11 +1,13 @@
 from multiprocessing import AuthenticationError
+
+from django import forms
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
-from passwords.models import PasswordVault
 from users.forms import SignupForm
-from django import forms
-from django.contrib.auth.decorators import login_required
+from passwords.models import PasswordVault
+from passwords.forms import CreatePasswordEntryForm
 
 # Create your views here.
 
@@ -47,8 +49,20 @@ def signup(request):
 @login_required(login_url='login')
 def home(request):
     vault = request.user.password_vault
+    
+    if request.method == 'POST':
+        form = CreatePasswordEntryForm(data=request.POST)
+        if form.is_valid():
+            pass_entry = form.save(commit=False)
+            pass_entry.vault = request.user.password_vault
+            # password = pass_entry.generate_password()
+            # pass_entry.hash_password(password)
+            pass_entry.save()
+            return redirect('home')
+    else:
+        form = CreatePasswordEntryForm()
     password_entries = vault.password_entry.all()
-    return render(request, 'home.html', context={'password_entries': password_entries})
+    return render(request, 'home.html', context={'pass_form': form, 'password_entries': password_entries})
 
 @login_required(login_url='login')
 def logout_view(request):
@@ -57,4 +71,3 @@ def logout_view(request):
         return redirect('login')
     except:
         raise AuthenticationError 
-    

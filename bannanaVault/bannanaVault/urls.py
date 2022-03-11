@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from users.views import login_view, home, signup, logout_view
-from passwords.views import create_password_entry
+from passwords.views import delete_password_entry
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +24,5 @@ urlpatterns = [
     path('login', login_view, name="login"),
     path('logout', logout_view, name="logout"),
     path('signup', signup, name="signup"),
-    path('create_password', create_password_entry, name="create_password_entry")
+    path('delete/<int:pk>/', delete_password_entry, name="delete-password")
 ]

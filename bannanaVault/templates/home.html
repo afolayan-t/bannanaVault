@@ -3,14 +3,25 @@
         <h1>
             {% if request.user.is_authenticated == True %}
             Authentication Successful
-            <a href="{% url 'create_password_entry' %}">Create a Password</a>
+            <div>
+                <form method="post" action="{% url 'home' %}">
+                    {% csrf_token %}
+                    {{ pass_form.as_p }}
+                    <button type="submit">submit</button>
+                </form>
+            </div>
                 {% if password_entries %}
                     {% for entry in password_entries %}
                         <div>
                             {% if entry %}
-                                <p>{{ entry.site_name }}</p>
-                                <p>{{ entry.auth_id }}</p>
-                                <p>{{ entry.site_url }}</p>
+                            <hr>
+                                <div>
+                                    <p>{{ entry.site_name }}</p>
+                                    <p>{{ entry.auth_id }}</p>
+                                    <p>{{ entry.site_url }}</p>
+                                    <p>{{ entry.password }}</p>
+                                </div>
+                                <button><a href="{% url 'delete-password' pk=entry.id %}">Delete</a></button>
                             {% endif %}
                         </div>
                     {% endfor %}

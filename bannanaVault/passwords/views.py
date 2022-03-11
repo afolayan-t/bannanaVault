@@ -1,5 +1,9 @@
+from ast import Pass
 from django.shortcuts import render, redirect
+from django.http import Http404
+
 from passwords.forms import CreatePasswordEntryForm
+from passwords.models import PasswordEntry
 
 # Create your views here.
 def create_password_entry(request):
@@ -20,5 +24,10 @@ def create_password_entry(request):
     
     return render(request, 'passwords/create_password_entry.html', context={'form': form})
 
-
-
+def delete_password_entry(request, pk):
+    try:
+        pass_entry = PasswordEntry.objects.get(pk=pk)
+        pass_entry.delete()
+    except:
+        raise Http404('This Password Entry does not exit')
+    return redirect('home')
