@@ -1,5 +1,6 @@
 from django import forms
 from passwords.models import PasswordEntry
+from passwords.password_generator import generate_password_advanced
 
 
 class CreatePasswordEntryForm(forms.ModelForm):
@@ -16,6 +17,8 @@ class CreatePasswordEntryForm(forms.ModelForm):
     def save(self, commit=True, *args, **kwargs):
         """Save function for PasswordEntryForm"""
         pass_entry = super(CreatePasswordEntryForm, self).save(commit, *args, **kwargs)
-        if pass_entry.password == None:
-            pass_entry.hash_password(PasswordEntry.generate_password(), commit)
+
+        # TODO: Change functionality to allow for passwords to be "rerolled"
+        if pass_entry.password is None:
+            pass_entry.hash_password(generate_password_advanced(), commit)
         return pass_entry
